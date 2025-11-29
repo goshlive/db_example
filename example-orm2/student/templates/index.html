@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+  <a class="btn btn-primary mb-3" href="{{ url_for('create') }}">Add Student</a>
+  <table class="table table-striped">
+    <thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Credits</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for s in students %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.dept_name }}</td>
+        <td>{{ s.tot_cred }}</td>
+        <td>
+          <a class="btn btn-sm btn-secondary" href="{{ url_for('edit', id=s.id) }}">Edit</a>
+          <form style="display:inline" method="post" action="{{ url_for('delete', id=s.id) }}" onsubmit="return confirm('Delete?');">
+            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5">No students yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

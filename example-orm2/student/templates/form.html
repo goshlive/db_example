@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if student %}
+    <h3>Edit Student #{{ student.id }}</h3>
+    <form method="post" action="{{ url_for('edit', id=student.id) }}">
+  {% else %}
+    <h3>New Student</h3>
+    <form method="post" action="{{ url_for('create') }}">
+  {% endif %}
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input class="form-control" name="name" value="{{ student.name if student else '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Department</label>
+      <input class="form-control" name="dept_name" value="{{ student.dept_name if student else '' }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Total Credits</label>
+      <input type="number" class="form-control" name="tot_cred" value="{{ student.tot_cred if student else 0 }}">
+    </div>
+    <button class="btn btn-success" type="submit">Save</button>
+    <a class="btn btn-secondary" href="{{ url_for('index') }}">Cancel</a>
+  </form>
+{% endblock %}

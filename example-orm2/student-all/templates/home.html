@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Select table</h2>
+  <div class="mb-3">
+    {% for t in tables %}
+      <a class="btn btn-outline-primary me-2 mb-2" href="{{ url_for('table_view', table_name=t) }}">{{ t|upper }}</a>
+    {% endfor %}
+  </div>
+{% endblock %}

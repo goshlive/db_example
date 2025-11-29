@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <h3>Query result</h3>
+  <p><strong>SQL:</strong> <code>{{ sql }}</code></p>
+  <table class="table table-sm table-bordered">
+    <thead><tr>{% for c in cols %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr>{% for c in cols %}<td>{{ r[c] }}</td>{% endfor %}</tr>
+    {% else %}
+      <tr><td colspan="{{ cols|length }}">No rows</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <a class="btn btn-secondary" href="{{ request.referrer or url_for('home') }}">Back</a>
+{% endblock %}

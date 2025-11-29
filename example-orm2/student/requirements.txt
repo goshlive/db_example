@@ -1,0 +1,6 @@
+Flask>=2.2
+Flask-SQLAlchemy>=3.0
+python-dotenv>=0.21
+mysql-connector-python>=8.0
+# or use PyMySQL:
+# pymysql>=1.0

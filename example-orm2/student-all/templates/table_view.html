@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+  <h3>Run SQL (SELECT only)</h3>
+  <form method="post" action="{{ url_for('execute_query') }}">
+    <div class="mb-2">
+      <textarea name="sql_query" class="form-control" rows="6" placeholder="e.g. SELECT s.name, t.grade FROM student s JOIN takes t ON s.id=t.ID ..."></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Run</button>
+  </form>
+  <p></p>
+
+  <h2>Table: {{ table|upper }}</h2>
+  <a class="btn btn-success mb-2" href="{{ url_for('create_table_item', table_name=table) }}">Create new</a>
+  <a class="btn btn-secondary mb-2" href="{{ url_for('home') }}">Back</a>
+
+  <table class="table table-sm table-bordered">
+    <thead>
+      <tr>
+        {% for c in cols %}<th>{{ c }}</th>{% endfor %}
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+        <tr>
+          {% for c in cols %}
+            <td>{{ r[c] }}</td>
+          {% endfor %}
+          <td>
+            {# Build edit link with pk values as query args #}
+            <a class="btn btn-sm btn-secondary" 
+            href="{{ url_for('edit_table_item', table_name=table) }}?{{ r['_pk_qs'] }}">Edit</a>
+
+            <form method="post" action="{{ url_for('delete_table_item', table_name=table) }}" style="display:inline" onsubmit="return confirm('Delete?');">
+              {% for p in pk_cols %}
+                <input type="hidden" name="{{ p }}" value="{{ r[p] }}">
+              {% endfor %}
+              <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="{{ cols|length + 1 }}">No rows</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
