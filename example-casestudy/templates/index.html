@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Restaurant Python case study</title>
+  <style>
+    body{font:16px/1.5 system-ui,sans-serif;background:#f3f6f8;color:#182d3b;margin:0}
+    main{max-width:1120px;margin:30px auto;padding:0 24px 40px}
+    h1{margin-bottom:4px}h2{font-size:20px;margin-top:0}
+    .muted{color:#546570}.notice{background:#fff1ce;padding:12px;border-radius:6px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    section{background:white;border:1px solid #d6e0e5;padding:20px;border-radius:8px;margin:16px 0}
+    label{display:block;margin:10px 0 4px}input,select,button{font:inherit;padding:8px;box-sizing:border-box}
+    input,select{width:100%;border:1px solid #a9bac4;border-radius:4px}
+    button{margin-top:12px;cursor:pointer;background:#235e7a;color:white;border:0;border-radius:4px}
+    table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #d6e0e5;padding:9px;text-align:left}
+    th{background:#e5edf3}.scroll{overflow:auto}.mode{max-width:420px}code{background:#eef3f5;padding:2px 4px}
+  </style>
+</head>
+<body><main>
+<h1>Restaurant Python case study</h1>
+<p class="muted">The console and this web page call the same repository methods.</p>
+<form class="mode" method="get" action="{{ url_for('index') }}">
+  <label for="mode">Database implementation</label>
+  <select id="mode" name="mode">
+    <option value="prepared" {% if mode == 'prepared' %}selected{% endif %}>Prepared statement</option>
+    <option value="orm" {% if mode == 'orm' %}selected{% endif %}>SQLAlchemy ORM</option>
+    <option value="raw" {% if mode == 'raw' %}selected{% endif %} {% if not raw_enabled %}disabled{% endif %}>Raw interpolation — intentionally unsafe</option>
+  </select><button>Switch implementation</button>
+</form>
+{% if mode == 'raw' %}<p class="notice">Raw interpolation is enabled for this local teaching demonstration.</p>{% endif %}
+{% if message %}<p class="notice">{{ message }}</p>{% endif %}
+<section><h2>{{ title }}</h2><div class="scroll">
+{% if rows %}
+<table><thead><tr>{% for key in rows[0] %}<th>{{ key }}</th>{% endfor %}</tr></thead>
+<tbody>{% for row in rows %}<tr>{% for value in row.values() %}<td>{{ value }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>
+{% else %}<p>No matching rows.</p>{% endif %}
+</div></section>
+{% macro common_fields(write=false) %}
+<input type="hidden" name="mode" value="{{ mode }}">
+{% if write %}<input type="hidden" name="csrf_token" value="{{ csrf_token }}">{% endif %}
+{% endmacro %}
+<div class="grid">
+<section><h2>Create customer</h2><form method="post" action="{{ url_for('create_customer') }}">{{ common_fields(true) }}
+<label>Customer ID<input name="customer_id" maxlength="10" value="CWEB" required></label>
+<label>Name<input name="customer_name" maxlength="100" value="Dewi" required></label><button>Create</button></form></section>
+<section><h2>Read customer</h2><form method="get" action="{{ url_for('customer') }}">{{ common_fields() }}
+<label>Customer ID<input name="customer_id" maxlength="10" value="CWEB" required></label><button>Read</button></form></section>
+<section><h2>Update customer</h2><form method="post" action="{{ url_for('update_customer') }}">{{ common_fields(true) }}
+<label>Customer ID<input name="customer_id" maxlength="10" value="CWEB" required></label>
+<label>New name<input name="customer_name" maxlength="100" value="Dewi Putri" required></label><button>Update</button></form></section>
+<section><h2>Delete customer</h2><form method="post" action="{{ url_for('delete_customer') }}">{{ common_fields(true) }}
+<label>Customer ID<input name="customer_id" maxlength="10" value="CWEB" required></label><button>Delete</button></form></section>
+<section><h2>1-N join</h2><form method="get" action="{{ url_for('orders') }}">{{ common_fields() }}
+<label>Customer ID<input name="customer_id" value="C01" required></label><button>Customer orders</button></form></section>
+<section><h2>M-N join</h2><form method="get" action="{{ url_for('details') }}">{{ common_fields() }}
+<label>Order ID<input name="order_id" value="O101" required></label><button>Order details</button></form></section>
+<section><h2>Exact-name search</h2><form method="get" action="{{ url_for('search') }}">{{ common_fields() }}
+<label>Name<input name="name" value="Made"></label><button>Search</button></form>
+<p>Compare <code>Made</code>, <code>' OR '1'='1</code> and <code>O'Connor</code> in each mode.</p></section>
+</div>
+<p class="muted">No database or table is created by this application. Use your existing Restaurant schema.</p>
+</main></body></html>

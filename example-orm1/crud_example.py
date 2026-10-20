@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import datetime
 
@@ -18,15 +18,9 @@ engine = create_engine(DATABASE_URI, echo=True)
 # Create a declarative base for the model
 Base = declarative_base()
 
-db = SQLAlchemy()
-
 # Define the User table as a Python class
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(50), nullable=False, unique=True)
-    email = Column(String(100), nullable=False)
-
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True, nullable=False, index=True)
     email = Column(String(255), unique=True, nullable=False, index=True)

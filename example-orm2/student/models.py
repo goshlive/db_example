@@ -1,12 +1,19 @@
 # models.py
 import uuid
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 db = SQLAlchemy()
 
 class Student(db.Model):
     __tablename__ = 'student'
-    id = db.Column(db.String(5), primary_key=True, default=lambda: str(uuid.uuid4()))
+    #id = db.Column(db.String(5), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(
+        db.String(5), 
+        primary_key=True, 
+        #Make sure the function get_next_id() is defined in your database to generate the next ID
+        default=lambda: db.session.scalar(func.get_next_id())
+    )
     name = db.Column(db.String(255), nullable=False)
     dept_name = db.Column(db.String(255))
     tot_cred = db.Column(db.Integer, default=0)
